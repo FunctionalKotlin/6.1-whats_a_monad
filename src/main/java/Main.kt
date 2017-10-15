@@ -14,3 +14,22 @@ fun <A, B> Option<A>.map(transform: (A) -> B): Option<B> = when(this) {
 fun <A> Option<A>.ifPresent(execute: (A) -> Unit) {
     if (this is Just) execute(this.value)
 }
+
+// User & Organization
+
+data class User(val name: String, val organizationId: Int)
+
+data class Organization(val name: String)
+
+fun getUserById(userId: Int): Option<User> =
+    Just(User("alex", 1))
+
+fun getOrganizationById(organizationId: Int): Option<Organization> =
+    Just(Organization("FunctionalHub"))
+
+fun main(args: Array<String>) {
+    val organization: Option<Option<Organization>> = getUserById(42)
+        .map { user -> getOrganizationById(user.organizationId) }
+
+    organization.ifPresent { println(it) }
+}
