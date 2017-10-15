@@ -6,10 +6,8 @@ object None : Option<Nothing>()
 
 data class Just<out A>(val value: A) : Option<A>()
 
-fun <A, B> Option<A>.map(transform: (A) -> B): Option<B> = when(this) {
-    is None -> None
-    is Just -> Just(transform(value))
-}
+fun <A, B> Option<A>.map(transform: (A) -> B): Option<B> =
+    flatMap { Just(transform(it)) }
 
 fun <A, B> Option<A>.flatMap(transform: (A) -> Option<B>): Option<B> = when(this) {
     is None -> None
