@@ -16,6 +16,8 @@ fun <A> Option<Option<A>>.flatten(): Option<A> = when(this) {
     is Just -> this.value
 }
 
+fun <A, B> Option<A>.mapAndFlatten(transform: (A) -> Option<B>): Option<B> = this.map(transform).flatten()
+
 fun <A> Option<A>.ifPresent(execute: (A) -> Unit) {
     if (this is Just) execute(this.value)
 }
@@ -34,8 +36,7 @@ fun getOrganizationById(organizationId: Int): Option<Organization> =
 
 fun main(args: Array<String>) {
     val organization: Option<Organization> = getUserById(42)
-        .map { user -> getOrganizationById(user.organizationId) }
-        .flatten()
+        .mapAndFlatten { user -> getOrganizationById(user.organizationId) }
 
     organization.ifPresent { println(it) }
 }
